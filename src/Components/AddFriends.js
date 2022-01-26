@@ -1,9 +1,10 @@
-import axios from "axios";
+import axiosWithAuth from "../utils/axiosWithAuth";
 import React from "react";
 
 class AddFriends extends React.Component {
   state = {
     name: "",
+    age: "",
     email: "",
   };
 
@@ -16,11 +17,12 @@ class AddFriends extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post("http://localhost:9000/api/friends", {
-        authorization: localStorage.getItem("token"),
-      })
-      .then((resp) => console.log(resp))
+    axiosWithAuth()
+      .post("http://localhost:9000/api/friends", { ...this.state })
+      .then(
+        (resp) => this.setState(resp.data),
+        this.props.history.push("/friends")
+      )
       .catch((err) => console.log(err));
   };
 
@@ -30,7 +32,7 @@ class AddFriends extends React.Component {
         <h1>Add Friend</h1>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Friend Name
+            Friend Name:
             <input
               type="text"
               name="name"
@@ -39,9 +41,19 @@ class AddFriends extends React.Component {
             ></input>
           </label>
           <label>
-            Friend Email
+            {" "}
+            Age:
             <input
-              type="text"
+              type="number"
+              name="age"
+              value={this.state.age}
+              onChange={this.handleChange}
+            ></input>
+          </label>
+          <label>
+            Friend Email:
+            <input
+              type="email"
               name="email"
               value={this.state.email}
               onChange={this.handleChange}

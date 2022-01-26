@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axiosWithAuth from "../utils/axiosWithAuth";
 
 class FriendsList extends React.Component {
   state = {
@@ -7,12 +7,8 @@ class FriendsList extends React.Component {
   };
 
   componentDidMount() {
-    axios
-      .get("http://localhost:9000/api/friends", {
-        headers: {
-          authorization: localStorage.getItem("token"),
-        },
-      })
+    axiosWithAuth()
+      .get("http://localhost:9000/api/friends")
       .then((resp) =>
         this.setState({
           friendsList: resp.data,
